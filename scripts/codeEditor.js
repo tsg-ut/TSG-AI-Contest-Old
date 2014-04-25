@@ -309,13 +309,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         this.internalEditor.setSize(width, height);
 
-        // set up event handlers
-
-        this.internalEditor.on("focus", function(instance) {
-            // implements yellow box when changing focus
-            $('.CodeMirror').addClass('focus');
-        });
-
         this.internalEditor.on('cursorActivity', function (instance) {
             // fixes the cursor lag bug
             instance.refresh();

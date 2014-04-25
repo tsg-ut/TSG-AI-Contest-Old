@@ -15,7 +15,7 @@ function Game(debugMode, startLevel) {
     /* unexposed methods */
 
     this._initialize = function () {
-        $('#screen').text('10');
+        $('#screen').text('100');
 
         // Initialize map and editor
         this.editor = new CodeEditor("editor", 600, 500, this);
@@ -33,7 +33,7 @@ function Game(debugMode, startLevel) {
         }
     };
 
-    this._evalLevelCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
+    this._evalCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
         var game = this;
 
         // by default, get code from the editor
