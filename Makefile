@@ -7,6 +7,7 @@ js-target-min = scripts/build/untrusted.min.js
 js-modules = scripts/util.js \
 			 scripts/_head.js \
              scripts/game.js \
+             scripts/ui.js \
              scripts/codeEditor.js \
              scripts/validate.js \
              scripts/_launcher_release.js \
@@ -15,6 +16,7 @@ js-modules = scripts/util.js \
 js-modules-debug = scripts/util.js \
 	               scripts/_head.js \
 				   scripts/game.js \
+				   scripts/ui.js \
 	               scripts/codeEditor.js \
 	               scripts/validate.js \
 	               scripts/_launcher_debug.js \

@@ -111,7 +111,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
                 exceptionText = "[Line " + lineNum + "] " + exceptionText;
             }
         }
-        this.display.appendError(exceptionText);
+        this._log(exceptionText);
 
         // throw e; // for debugging
         return null;
@@ -171,7 +171,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions) {
             return result;
         }
     } catch (e) {
-        this.map.writeStatus(e.toString());
+        this._log(e.toString());
         // throw e; // for debugging
         if (throwExceptions) {
             throw e;
@@ -200,7 +200,7 @@ Game.prototype.validateAndRunScript = function (code) {
         var savedState = this.editor.getGoodState(this._currentLevel);
         this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
     } catch (e) {
-        this.display.writeStatus(e.toString());
+        this._log(e.toString());
         //throw e; // for debugging
     }
 }

@@ -20,6 +20,8 @@ function Game(debugMode, startLevel) {
         // Initialize map and editor
         this.editor = new CodeEditor("editor", 600, 500, this);
 
+        this.enableButtons();
+
         this._globalVars = []; // keep track of current global variables
         for (p in window) {
             if (window.propertyIsEnumerable(p)) {
@@ -99,7 +101,7 @@ function Game(debugMode, startLevel) {
                 // workaround because we can't use writeStatus() in startLevel()
                 // (due to the text getting overwritten by the fade-in)
                 if (game.editor.getProperties().startingMessage) {
-                    game.display.writeStatus(game.editor.getProperties().startingMessage);
+                    game.writeStatus(game.editor.getProperties().startingMessage);
                 }
             });
 
@@ -123,4 +125,10 @@ function Game(debugMode, startLevel) {
             this.map.getPlayer()._canMove = false;
         }
     };
+
+    this._log = function (text) {
+        $('#log').append(text);
+        $('#log').append('\n');
+        console.log(text);
+    }
 }
