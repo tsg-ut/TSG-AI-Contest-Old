@@ -231,50 +231,6 @@ Game.prototype.clearModifiedGlobals = function() {
     }
 };
 
-// Specific validators go here
-
-Map.prototype.validateAtLeastXObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count < num) {
-        throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateAtMostXObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count > num) {
-        throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateExactlyXManyObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count != num) {
-        throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateAtMostXDynamicObjects = function(num) {
-    var count = this.getDynamicObjects().length;
-    if (count > num) {
-        throw 'Too many dynamic objects on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateNoTimers = function() {
-    var count = this._countTimers();
-    if (count > 0) {
-        throw 'Too many timers set on the map! Expected: 0, found: ' + count;
-    }
-};
-
-Map.prototype.validateAtLeastXLines = function(num) {
-    var count = this._getLines().length;
-    if (count < num) {
-        throw 'Not enough lines on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
 // Function tampering prevention
 
 Game.prototype.referenceImplementations = {

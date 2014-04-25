@@ -64,7 +64,6 @@ function Game(debugMode, startLevel) {
     this._displayedChapters = [];
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
-    this._playerPrototype = Player; // to allow messing with map.js and player.js later
 
     /* unexposed getters */
 
@@ -77,7 +76,6 @@ function Game(debugMode, startLevel) {
 
         // Initialize map and editor
         this.editor = new CodeEditor("editor", 600, 500, this);
-        this.map = new Map(this.display, this);
 
         this._globalVars = []; // keep track of current global variables
         for (p in window) {

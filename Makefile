@@ -8,17 +8,7 @@ js-modules = scripts/util.js \
 			 scripts/_head.js \
              scripts/game.js \
              scripts/codeEditor.js \
-             scripts/display.js \
-             scripts/dynamicObject.js \
-             scripts/inventory.js \
-             scripts/map.js \
-             scripts/objects.js \
-             scripts/player.js \
-             scripts/reference.js \
-             scripts/sound.js \
              scripts/validate.js \
-             scripts/ui.js \
-	         levels/levels.js \
              scripts/_launcher_release.js \
 	         scripts/_tail.js
 
@@ -26,17 +16,7 @@ js-modules-debug = scripts/util.js \
 	               scripts/_head.js \
 				   scripts/game.js \
 	               scripts/codeEditor.js \
-	               scripts/display.js \
-	               scripts/dynamicObject.js \
-	               scripts/inventory.js \
-	               scripts/map.js \
-	               scripts/objects.js \
-	               scripts/player.js \
-	               scripts/reference.js \
-	               scripts/sound.js \
 	               scripts/validate.js \
-	               scripts/ui.js \
-	               levels/levels.js \
 	               scripts/_launcher_debug.js \
 	               scripts/_tail.js
 
@@ -44,8 +24,6 @@ yui-jar = tools/yuicompressor-2.4.8pre.jar
 
 # `make` or `make debug` merges scripts (using debug launcher)
 debug:
-	@echo "Building level file…\t\t\t\c"
-	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules-debug) > $(js-target)
 	@echo "[ Done ]"
