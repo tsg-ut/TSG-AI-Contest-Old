@@ -40,10 +40,6 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             }
         }
 
-        var dummyMap = new Map(new DummyDisplay(), this);
-        dummyMap._dummy = true;
-        dummyMap._setProperties(this.editor.getProperties().mapProperties);
-
         // modify the code to always check time to prevent infinite loops
         allCode = allCode.replace(/\)\s*{/g, ") {"); // converts Allman indentation -> K&R
         allCode = allCode.replace(/while\s*\((.*)\)/g, "for (dummy=0;$1;)"); // while -> for
@@ -112,6 +108,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             }
         }
         this._log(exceptionText);
+        throw e;
 
         // throw e; // for debugging
         return null;
@@ -172,10 +169,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions) {
         }
     } catch (e) {
         this._log(e.toString());
-        // throw e; // for debugging
-        if (throwExceptions) {
-            throw e;
-        }
+        throw e; // for debugging
     }
 };
 
@@ -201,7 +195,7 @@ Game.prototype.validateAndRunScript = function (code) {
         this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
     } catch (e) {
         this._log(e.toString());
-        //throw e; // for debugging
+        throw e; // for debugging
     }
 }
 

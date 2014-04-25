@@ -46,15 +46,6 @@ function Game(debugMode, startLevel) {
             loadedFromEditor = true;
         }
 
-        // if we're editing a script file, do something completely different
-        if (this._currentFile !== null && !restartingLevelFromScript) {
-            this.validateAndRunScript(allCode);
-            return;
-        }
-
-        // save current display state (for scrolling up later)
-        this.display.saveGrid(this.map);
-
         // validate the code
         // if it passes validation, returns the startLevel function if it pass
         // if it fails validation, returns false
@@ -105,24 +96,12 @@ function Game(debugMode, startLevel) {
                 }
             });
 
-            this.map._ready();
-
-            // start bg music for this level
-            if (this.editor.getProperties().music) {
-                this.sound.playTrackByName(this.editor.getProperties().music);
-            }
-
             // finally, allow player movement
             if (this.map.getPlayer()) {
                 this.map.getPlayer()._canMove = true;
                 game.display.focus();
             }
         } else { // code is invalid
-            // play error sound
-            this.sound.playSound('static');
-
-            // disable player movement
-            this.map.getPlayer()._canMove = false;
         }
     };
 
