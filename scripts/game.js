@@ -18,7 +18,7 @@ function Game(debugMode, startLevel) {
         $('#screen').text('100');
 
         // Initialize map and editor
-        this.editor = new CodeEditor("editor", 600, 500, this);
+        this.editor = new CodeEditor("editor", 600, 300, this);
 
         this.enableButtons();
 
