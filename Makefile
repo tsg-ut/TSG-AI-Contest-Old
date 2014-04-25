@@ -45,7 +45,6 @@ yui-jar = tools/yuicompressor-2.4.8pre.jar
 # `make` or `make debug` merges scripts (using debug launcher)
 debug:
 	@echo "Building level file…\t\t\t\c"
-	@./compile_levels.sh
 	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules-debug) > $(js-target)

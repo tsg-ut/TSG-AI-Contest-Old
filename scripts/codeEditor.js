@@ -299,10 +299,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     this.initialize = function() {
         this.internalEditor = CodeMirror.fromTextArea(document.getElementById(textAreaDomID), {
-            theme: 'vibrant-ink',
             lineNumbers: true,
             dragDrop: false,
-            smartIndent: false
+            smartIndent: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            mode: 'javascript'
         });
 
         this.internalEditor.setSize(width, height);
@@ -312,73 +314,14 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.internalEditor.on("focus", function(instance) {
             // implements yellow box when changing focus
             $('.CodeMirror').addClass('focus');
-            $('#screen canvas').removeClass('focus');
-
-            $('#helpPane').hide();
-            $('#menuPane').hide();
         });
 
         this.internalEditor.on('cursorActivity', function (instance) {
             // fixes the cursor lag bug
             instance.refresh();
-
-            // automatically smart-indent if the cursor is at position 0
-            // and the line is empty (ignore if backspacing)
-            if (lastChange.origin !== '+delete') {
-                var loc = instance.getCursor();
-                if (loc.ch === 0 && instance.getLine(loc.line).trim() === "") {
-                    instance.indentLine(loc.line, "prev");
-                }
-            }
         });
 
-        this.internalEditor.on('change', markEditableSections);
         this.internalEditor.on('change', trackUndoRedo);
-    }
-
-    // loads code into editor
-    this.loadCode = function(codeString) {
-        /*
-         * logic: before setting the value of the editor to the code string,
-         * we run it through setEditableLines and setEditableSections, which
-         * strip our notation from the string and as a side effect build up
-         * a data structure of editable areas
-         */
-
-        this.internalEditor.off('beforeChange', enforceRestrictions);
-        codeString = preprocess(codeString);
-        this.internalEditor.setValue(codeString);
-        this.internalEditor.on('beforeChange', enforceRestrictions);
-
-        this.markUneditableLines();
-        this.internalEditor.refresh();
-        this.internalEditor.clearHistory();
-    };
-
-    // marks uneditable lines within editor
-    this.markUneditableLines = function() {
-        var instance = this.internalEditor;
-        for (var i = 0; i < instance.lineCount(); i++) {
-            if (editableLines.indexOf(i) === -1) {
-                instance.addLineClass(i, 'wrap', 'disabled');
-            }
-        }
-    }
-
-    // marks editable sections inside uneditable lines within editor
-    var markEditableSections = function(instance) {
-        $('.editableSection').removeClass('editableSection');
-        for (var line in editableSections) {
-            if (editableSections.hasOwnProperty(line)) {
-                var sections = editableSections[line];
-                for (var i = 0; i < sections.length; i++) {
-                    var section = sections[i];
-                    var from = {'line': parseInt(line), 'ch': section[0]};
-                    var to = {'line': parseInt(line), 'ch': section[1]};
-                    instance.markText(from, to, {'className': 'editableSection'});
-                }
-            }
-        }
     }
 
     // returns all contents

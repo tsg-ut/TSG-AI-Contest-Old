@@ -79,8 +79,6 @@ function Game(debugMode, startLevel) {
         this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
 
-        // Initialize validator
-        this.saveReferenceImplementations(); // prevents tampering with methods
         this._globalVars = []; // keep track of current global variables
         for (p in window) {
             if (window.propertyIsEnumerable(p)) {
@@ -88,38 +86,9 @@ function Game(debugMode, startLevel) {
             }
         }
 
-        // Enable controls
-        this.enableShortcutKeys();
-        this.enableButtons();
-        this.setUpNotepad();
-
-        // Load help commands from local storage (if possible)
-        if (localStorage.getItem('helpCommands')) {
-            __commands = localStorage.getItem('helpCommands').split(';');
-        }
-
         // Enable debug features
         if (debugMode) {
             this._debugMode = true;
-            this._levelReached = 999; // make all levels accessible
-            __commands = Object.keys(this.reference); // display all help
-            this.sound.toggleSound(); // mute sound by default in debug mode
-        } else {
-            // some people are at work right now
-            if (document.referrer.indexOf('news.ycombinator.com') > -1) {
-                this.toggleSound();
-            }
-        }
-
-        // Lights, camera, action
-        if (startLevel) {
-            this._currentLevel = startLevel - 1;
-            this._getLevel(startLevel, debugMode);
-        } else if (!debugMode && this._levelReached != 1) {
-            // load last level reached (unless it's the credits)
-            this._getLevel(Math.min(this._levelReached, 21));
-        } else {
-            this._intro();
         }
     };
 
