@@ -17,7 +17,6 @@ Game.prototype.verbotenWords = [
     'document', // in particular, document.write is dangerous
     'self.', 'self[', 'top.', 'top[', 'frames',  // self === top === frames === window
     'parent', 'content', // parent === content === window in most of cases
-    'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[' // prevents this['win'+'dow'], etc.
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
