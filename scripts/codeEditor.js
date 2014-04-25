@@ -334,26 +334,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
         return lines.join('\n');
     }
 
-    // returns only the code written in editable lines and sections
-    this.getPlayerCode = function () {
-        var code = '';
-        for (var i = 0; i < this.internalEditor.lineCount(); i++) {
-            if (editableLines && editableLines.indexOf(i) > -1) {
-                code += this.internalEditor.getLine(i) + ' \n';
-            }
-        }
-        for (var line in editableSections) {
-            if (editableSections.hasOwnProperty(line)) {
-                var sections = editableSections[line];
-                for (var i = 0; i < sections.length; i++) {
-                    var section = sections[i];
-                    code += this.internalEditor.getLine(line).slice(section[0], section[1]) + ' \n';
-                }
-            }
-        }
-        return code;
-    };
-
     this.getProperties = function () {
         return properties;
     }
@@ -370,18 +350,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.markUneditableLines();
         this.internalEditor.refresh();
         this.internalEditor.clearHistory();
-    }
-
-    this.saveGoodState = function () {
-        var lvlNum = game._currentFile ? game._currentFile : game._currentLevel;
-        localStorage.setItem('level' + lvlNum + '.lastGoodState', JSON.stringify({
-            code: this.getCode(true),
-            playerCode: this.getPlayerCode(),
-            editableLines: editableLines,
-            editableSections: editableSections,
-            endOfStartLevel: endOfStartLevel,
-            version: this.getProperties().version
-        }));
     }
 
     this.createGist = function () {

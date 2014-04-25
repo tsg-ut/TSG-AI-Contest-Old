@@ -8,10 +8,6 @@ function Game(debugMode, startLevel) {
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
 
-    /* unexposed getters */
-
-    this._getHelpCommands = function () { return __commands; };
-
     /* unexposed methods */
 
     this._initialize = function () {
