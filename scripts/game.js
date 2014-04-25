@@ -73,32 +73,7 @@ function Game(debugMode, startLevel) {
     /* unexposed methods */
 
     this._initialize = function () {
-        // Fix potential corruption
-        // levelReached may be "81111" instead of "8" due to bug
-        if (this._levelReached > this._levelFileNames.length) {
-            for (var l = 1; l <= this._levelFileNames.length; l++) {
-                if (!localStorage["level" + l + ".lastGoodState"]) {
-                    this._levelReached = l - 1;
-                    break;
-                }
-            }
-        }
-
-        // Initialize sound
-        this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
-
-        // Initialize map display
-        this.display = ROT.Display.create(this, {
-            width: this._dimensions.width,
-            height: this._dimensions.height,
-            fontSize: 20
-        });
-        this.display.setupEventHandlers();
-        var display = this.display;
-        $('#screen').append(this.display.getContainer());
-        $('#drawingCanvas, #dummyDom, #dummyDom *').click(function () {
-            display.focus();
-        });
+        $('#screen').text('10');
 
         // Initialize map and editor
         this.editor = new CodeEditor("editor", 600, 500, this);
