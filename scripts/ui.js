@@ -1,51 +1,6 @@
-var toggleFocus = (function () {
-    var focus_state = undefined;
-    return function do_toggle(game) {
-        if (!focus_state || focus_state === 'display') {
-            focus_state = 'editor';
-            game.editor.focus();
-        } else if (focus_state === 'editor') {
-            focus_state = 'display';
-            game.display.focus();
-        }
-    };
-})();
-
 Game.prototype.enableShortcutKeys = function () {
-    var game = this;
-
-    shortcut.add('ctrl+1', function () {
-        $("#helpButton").click();
-        return true;
-    });
-
-	shortcut.add('ctrl+2', function () {
-        $("#toggleFocusButton").click();
-		return true;
-	});
-
-    shortcut.add('ctrl+3', function () {
-        $("#notepadButton").click();
-        return true;
-    });
-
-    shortcut.add('ctrl+4', function () {
-        $("#resetButton").click();
-        return true;
-    });
-
     shortcut.add('ctrl+5', function () {
         $("#executeButton").click();
-        return true;
-    });
-
-    shortcut.add('ctrl+6', function () {
-        $("#phoneButton").click();
-        return true;
-    });
-
-    shortcut.add('ctrl+0', function () {
-        $("#menuButton").click();
         return true;
     });
 };
@@ -53,51 +8,9 @@ Game.prototype.enableShortcutKeys = function () {
 Game.prototype.enableButtons = function () {
     var game = this;
 
-    $("#helpButton").click( function () {
-        game.sound.playSound('select');
-        game.openHelp();
-    });
-
-    $("#toggleFocusButton").click( function () {
-        game.sound.playSound('select');
-        toggleFocus(game);
-    });
-
-    $('#notepadButton').click( function () {
-        game.sound.playSound('select');
-        $('#helpPane, #menuPane').hide();
-        $('#notepadPane').toggle();
-        game.notepadEditor.refresh();
-        return true;
-    });
-
-    $("#resetButton").click( function () {
-        game.sound.playSound('blip');
-        game._getLevel(game._currentLevel, true);
-    });
-
     $("#executeButton").click( function () {
         game.sound.playSound('blip');
         game._evalLevelCode();
-    });
-
-    $("#phoneButton").click( function () {
-        game.sound.playSound('select');
-        game.usePhone();
-    });
-
-    $("#menuButton").click( function () {
-        game.sound.playSound('select');
-        game.openMenu();
-    });
-
-    $("#helpPaneCloseButton").click ( function () {
-        game.sound.playSound('select');
-        $('#helpPane').hide();
-    });
-
-    $("#muteButton").click( function () {
-        game.sound.toggleSound();
     });
 };
 

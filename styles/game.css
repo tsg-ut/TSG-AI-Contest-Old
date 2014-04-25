@@ -68,3 +68,7 @@ body {
 .CodeMirror-lines .disabled .editableSection {
 	background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
 }
+
+#executeButton {
+    display: block;
+}
