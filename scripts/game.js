@@ -35,73 +35,20 @@ function Game(debugMode, startLevel) {
         }
     };
 
-    this._evalCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
+    this._evalCode = function () {
         var game = this;
 
-        // by default, get code from the editor
-        var loadedFromEditor = false;
-        if (!allCode) {
-            allCode = this.editor.getCode();
-            playerCode = this.editor.getPlayerCode();
-            loadedFromEditor = true;
-        }
+        code = this.editor.getCode();
+        loadedFromEditor = true;
 
         // validate the code
         // if it passes validation, returns the startLevel function if it pass
         // if it fails validation, returns false
-        var validatedStartLevel = this.validate(allCode, playerCode, restartingLevelFromScript);
+        var validatedTurn = this.validate(code);
 
-        if (validatedStartLevel) { // code is valid
-            // reset the map
-            this.map._reset(); // for cleanup
-            this.map = new Map(this.display, this);
-            this.map._reset();
-            this.map._setProperties(this.editor.getProperties()['mapProperties']);
-
-            // save editor state
-            __currentCode = allCode;
-            if (loadedFromEditor && !restartingLevelFromScript) {
-                this.editor.saveGoodState();
-            }
-
-            // clear drawing canvas and hide it until level loads
-            $('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
-            $('#drawingCanvas').hide();
-            $('#dummyDom').hide();
-
-            // set correct inventory state
-            this.setInventoryStateByLevel(this._currentLevel);
-
+        if (validatedTurn) { // code is valid
             // start the level
-            validatedStartLevel(this.map);
-
-            // deal with sneaky players
-            this.clearModifiedGlobals();
-
-            // draw the map
-            this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
-                game.map.refresh(); // refresh inventory display
-
-                // show map overlays if necessary
-                if (game.map._properties.showDrawingCanvas) {
-                    $('#drawingCanvas').show();
-                } else if (game.map._properties.showDummyDom) {
-                    $('#dummyDom').show();
-                }
-
-                // workaround because we can't use writeStatus() in startLevel()
-                // (due to the text getting overwritten by the fade-in)
-                if (game.editor.getProperties().startingMessage) {
-                    game.writeStatus(game.editor.getProperties().startingMessage);
-                }
-            });
-
-            // finally, allow player movement
-            if (this.map.getPlayer()) {
-                this.map.getPlayer()._canMove = true;
-                game.display.focus();
-            }
-        } else { // code is invalid
+            validatedTurn(100);
         }
     };
 

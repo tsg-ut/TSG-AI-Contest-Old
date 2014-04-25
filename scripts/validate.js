@@ -29,21 +29,26 @@ var DummyDisplay = function () {
     this.writeStatus = function () {};
 };
 
-Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScript) {
+Game.prototype.validate = function(code) {
     var game = this;
+
+    var turnCode =
+        ["var turn = function(stone) {",
+            "{{code}}",
+        "}"].join('\n');
 
     try {
         for (var i = 0; i < this.verbotenWords.length; i++) {
             var badWord = this.verbotenWords[i];
-            if (playerCode.indexOf(badWord) > -1) {
+            if (code.indexOf(badWord) > -1) {
                 throw "You are not allowed to use '" + badWord + "'!";
             }
         }
 
         // modify the code to always check time to prevent infinite loops
-        allCode = allCode.replace(/\)\s*{/g, ") {"); // converts Allman indentation -> K&R
-        allCode = allCode.replace(/while\s*\((.*)\)/g, "for (dummy=0;$1;)"); // while -> for
-        allCode = $.map(allCode.split('\n'), function (line, i) {
+        code = code.replace(/\)\s*{/g, ") {"); // converts Allman indentation -> K&R
+        code = code.replace(/while\s*\((.*)\)/g, "for (dummy=0;$1;)"); // while -> for
+        code = $.map(code.split('\n'), function (line, i) {
             return line.replace(/for\s*\((.*);(.*);(.*)\)\s*{/g,
                 "for ($1, startTime = Date.now();$2;$3){" +
                     "if (Date.now() - startTime > " + game.allowedTime + ") {" +
@@ -51,58 +56,21 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
                     "}");
         }).join('\n');
 
+        code = turnCode.replace('{{code}}', code);
+
         if (this._debugMode) {
-            console.log(allCode);
+            console.log(code);
         }
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
-        this._eval(allCode);
+        this._eval(code);
 
-        // start the level on a dummy map to validate
-        startLevel(dummyMap);
-
-        // re-run to check if the player messed with startLevel
-        this._startOfStartLevelReached = false;
-        this._endOfStartLevelReached = false;
-        dummyMap._reset();
-        startLevel(dummyMap);
-
-        // does startLevel() execute fully?
-        // (if we're restarting a level after editing a script, we can't test for this
-        // - nor do we care)
-        if (!this._startOfStartLevelReached && !restartingLevelFromScript) {
-            throw 'startLevel() has been tampered with!';
-        }
-        if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
-            throw 'startLevel() returned prematurely!';
-        }
-
-        // has the player tampered with any functions?
-        this.detectTampering(dummyMap, dummyMap.getPlayer());
-
-        this.validateLevel = function () { return true; };
-        // does validateLevel() succeed?
-        if (typeof(validateLevel) === "function") {
-            this.validateLevel = validateLevel;
-            validateLevel(dummyMap);
-        }
-
-        this.onExit = function () { return true; };
-        if (typeof onExit === "function") {
-            this.onExit = onExit;
-        }
-
-        this.objective = function () { return false; };
-        if (typeof objective === "function") {
-            this.objective = objective;
-        }
-
-        return startLevel;
+        return turn;
     } catch (e) {
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {
-            var lineNum = this.findSyntaxError(allCode, e.message);
+            var lineNum = this.findSyntaxError(code, e.message);
             if (lineNum) {
                 exceptionText = "[Line " + lineNum + "] " + exceptionText;
             }
@@ -114,90 +82,6 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         return null;
     }
 };
-
-// makes sure nothing un-kosher happens during a callback within the game
-// e.g. item collison; function phone
-Game.prototype.validateCallback = function(callback, throwExceptions) {
-    try {
-        // run the callback
-        var result = callback();
-
-        // check if validator still passes
-        try {
-            if (typeof(this.validateLevel) === 'function') {
-                this.validateLevel(this.map);
-            }
-        } catch (e) {
-            // validation failed - not much to do here but restart the level, unfortunately
-            this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
-
-            // play error sound
-            this.sound.playSound('static');
-
-            // disable player movement
-            this.map.getPlayer()._canMove = false;
-            this.map._callbackValidationFailed = true;
-
-            return;
-        }
-
-        // on maps with many objects (e.g. boss fight),
-        // we can't afford to do these steps
-        if (!this.map._properties.quickValidateCallback) {
-            this.clearModifiedGlobals();
-
-            // has the player tampered with any functions?
-            try {
-                this.detectTampering(this.map, this.map.getPlayer());
-            } catch (e) {
-                this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
-
-                // play error sound
-                this.sound.playSound('static');
-
-                // disable player movement
-                this.map.getPlayer()._canMove = false;
-                this.map._callbackValidationFailed = true;
-
-                return;
-            }
-
-            // refresh the map, just in case
-            this.map.refresh();
-
-            return result;
-        }
-    } catch (e) {
-        this._log(e.toString());
-        throw e; // for debugging
-    }
-};
-
-Game.prototype.validateAndRunScript = function (code) {
-    try {
-        // Game.prototype.blah => game.blah
-        code = code.replace(/Game.prototype/, 'this');
-
-        // Blah => game._blahPrototype
-        code = code.replace(/function Map/, 'this._mapPrototype = function');
-        code = code.replace(/function Player/, 'this._playerPrototype = function');
-
-        new Function(code).bind(this).call(); // bind the function to current instance of game!
-
-        if (this._mapPrototype) {
-            // re-initialize map if necessary
-            this.map._reset(); // for cleanup
-            this.map = new this._mapPrototype(this.display, this);
-        }
-
-        // and restart current level from saved state
-        var savedState = this.editor.getGoodState(this._currentLevel);
-        this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
-    } catch (e) {
-        this._log(e.toString());
-        throw e; // for debugging
-    }
-}
 
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
