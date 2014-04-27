@@ -1,33 +1,24 @@
 function Game(debugMode, challenge) {
-    var __currentCode = '';
-    var __commands = [];
+    var game = this;
 
-    var _challenge = 'stone';
+    this._challenge = {};
+    this._challenge.name = challenge;
 
-    this._eval = window.eval; // store our own copy of eval so that we can override window.eval
-
-    this.editor = new CodeEditor("editor", 400, 300, this);
-
-    this.enableButtons();
-
-    this._globalVars = []; // keep track of current global variables
-    for (p in window) {
-        if (window.propertyIsEnumerable(p)) {
-            this._globalVars.push(p);
-        }
-    }
-
-    // Enable debug features
-    if (debugMode) {
-        this._debugMode = true;
+    this._loadChallenge = function () {
+        return $.when(
+            $.ajax({
+                url: 'challenges/' + game._challenge.name + '/umpire.js',
+                dataType: 'script'
+            }),
+            $.ajax({
+                url: 'challenges/' + game._challenge.name + '/contestant.js',
+                dataType: 'text',
+                success: function (data) {
+                    game._challenge.contestant = data;
+                }
+            })
+        );
     };
-
-    this._loadScript = function (scriptName) {
-        return $.ajax({
-            url: scriptName,
-            dataType: 'script'
-        });
-    }
 
     this._execute = function () {
         var code = this.editor.getCode();
@@ -43,5 +34,37 @@ function Game(debugMode, challenge) {
         $('#log').append(text);
         $('#log').append('\n');
         console.log(text);
+    };
+
+    this._eval = window.eval; // store our own copy of eval so that we can override window.eval
+
+    this.editor = new CodeEditor("editor", 400, 300, this);
+
+    this._globalVars = []; // keep track of current global variables
+    for (p in window) {
+        if (window.propertyIsEnumerable(p)) {
+            this._globalVars.push(p);
+        }
     }
+
+    if (debugMode) {
+        this._debugMode = true;
+    };
+
+    // load challenge scripts
+    /*$.ajax({
+        url: 'challenges/' + game._challenge.name + '/umpire.js',
+        dataType: 'script',
+        success: function(){}
+    }).done(function () {
+        game.enableButtons();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        game._log(errorThrown);
+        game._log('loading challenge failed.');
+    });*/
+    $.getScript('challenges/' + game._challenge.name + '/umpire.js', function () {
+
+        alert("Script loaded and executed.");
+        // Here you can use anything you defined in the loaded script
+    });
 }
