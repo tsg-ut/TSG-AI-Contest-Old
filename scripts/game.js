@@ -1,4 +1,4 @@
-function Game(debugMode, startLevel) {
+function Game(debugMode, challenge) {
     var __currentCode = '';
     var __commands = [];
 
@@ -6,39 +6,36 @@ function Game(debugMode, startLevel) {
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
 
-    this._initialize = function () {
-        // Initialize map and editor
-        this.editor = new CodeEditor("editor", 600, 300, this);
+    this.editor = new CodeEditor("editor", 400, 300, this);
 
-        this.enableButtons();
+    this.enableButtons();
 
-        this._globalVars = []; // keep track of current global variables
-        for (p in window) {
-            if (window.propertyIsEnumerable(p)) {
-                this._globalVars.push(p);
-            }
+    this._globalVars = []; // keep track of current global variables
+    for (p in window) {
+        if (window.propertyIsEnumerable(p)) {
+            this._globalVars.push(p);
         }
+    }
 
-        // Enable debug features
-        if (debugMode) {
-            this._debugMode = true;
-        }
+    // Enable debug features
+    if (debugMode) {
+        this._debugMode = true;
     };
 
-    this._evalCode = function () {
-        var game = this;
+    this._loadScript = function (scriptName) {
+        return $.ajax({
+            url: scriptName,
+            dataType: 'script'
+        });
+    }
 
-        code = this.editor.getCode();
-        loadedFromEditor = true;
+    this._execute = function () {
+        var code = this.editor.getCode();
 
-        // validate the code
-        // if it passes validation, returns the startLevel function if it pass
-        // if it fails validation, returns false
-        var validatedTurn = this.validate(code);
+        var validatedAct = this.validate(code);
 
-        if (validatedTurn) { // code is valid
-            // start the level
-            validatedTurn(100);
+        if (validatedAct) {
+            validatedAct(100);
         }
     };
 

@@ -8,57 +8,44 @@ body {
 	color: black;
 	width: 100%;
 	height: 100%;
-	margin:0;
+	margin: 0;
+}
+
+#wrap {
+    width: 804px;
+    height: 402px;
+    margin: 30px auto 0;
 }
 
 #screen {
+    width: 400px;
+    height: 400px;
+    float: left;
+	border: 2px solid #888;
+    margin-left: -2px;
+    margin-top: -2px;
+
 	font-size: 96px;
 }
 
 #editorPane {
-	position: absolute;
-	top: 0;
-	left: 602px;
+    width: 400px;
+    height: 400px;
+    float: left;
 }
 
 #editorPane #editor {
 	display: none;
 }
 
-#editorPane #buttons {
-	margin-top: 5px;
-	padding: 7px;
-	background: #000;
-	cursor: pointer;
-}
-
-#editorPane #buttons a:hover {
-	background: #fff;
-	color: #000;
-}
-
-#editorPane #buttons .keys {
-	background: #fff;
-	color: #000;
-	display: inline-block; /* for min-width */
-	min-width: 15px;
-	text-align: center;
-}
-
 .CodeMirror {
-	border: 2px solid #333;
-	border-left: 0;
-	margin-left: 2px;
+	border: 2px solid #888;
+    margin-left: -2px;
+    margin-top: -2px;
 }
 
 .CodeMirror-cursor, .CodeMirror-selected {
 	z-index: 10;
-}
-
-.CodeMirror.focus {
-	border: 2px solid #888;
-	border-left: 2px solid #888;
-	margin-left: 0;
 }
 
 .CodeMirror-lines .disabled {
@@ -71,9 +58,19 @@ body {
 
 #log {
     width: 100%;
-    height: 120px;
+    height: 98px;
+    margin: 0;
+    padding: 0;
+	border: 2px solid #888;
+    margin-left: -2px;
+    margin-top: -2px;
+
+    resize: none;
 }
 
 #executeButton {
     display: block;
+    margin: 0 auto;
+
+    font-size: 48px;
 }

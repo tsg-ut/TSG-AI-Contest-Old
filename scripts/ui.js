@@ -9,6 +9,6 @@ Game.prototype.enableButtons = function () {
     var game = this;
 
     $("#executeButton").click( function () {
-        game._evalCode();
+        game._execute();
     });
 };

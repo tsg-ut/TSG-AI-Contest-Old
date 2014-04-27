@@ -321,16 +321,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
     this.getCode = function (forSaving) {
         var lines = this.internalEditor.getValue().split('\n');
 
-        if (!forSaving && startOfStartLevel) {
-            // insert the end of startLevel() marker at the appropriate location
-            lines.splice(startOfStartLevel, 0, "map._startOfStartLevelReached()");
-        }
-
-        if (!forSaving && endOfStartLevel) {
-            // insert the end of startLevel() marker at the appropriate location
-            lines.splice(endOfStartLevel+1, 0, "map._endOfStartLevelReached()");
-        }
-
         return lines.join('\n');
     }
 
