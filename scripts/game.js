@@ -1,18 +1,12 @@
 function Game(debugMode, startLevel) {
-    /* private properties */
-
     var __currentCode = '';
     var __commands = [];
 
-    /* unexposed properties */
+    var _challenge = 'stone';
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
 
-    /* unexposed methods */
-
     this._initialize = function () {
-        $('#screen').text('100');
-
         // Initialize map and editor
         this.editor = new CodeEditor("editor", 600, 300, this);
 

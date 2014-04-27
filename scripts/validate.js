@@ -17,7 +17,9 @@ Game.prototype.verbotenWords = [
     'document', // in particular, document.write is dangerous
     'self.', 'self[', 'top.', 'top[', 'frames',  // self === top === frames === window
     'parent', 'content', // parent === content === window in most of cases
-    'this[' // prevents this['win'+'dow'], etc.
+    'this[', // prevents this['win'+'dow'], etc.
+    'alert', // prevents alert
+    '~' // prevents ~function(){}();
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
@@ -66,7 +68,7 @@ Game.prototype.validate = function(code) {
 
         this._eval(code);
 
-        return turn;
+        return act;
     } catch (e) {
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {
