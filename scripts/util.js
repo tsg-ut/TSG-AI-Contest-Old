@@ -14,6 +14,12 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+// from http://stackoverflow.com/questions/6466135/
+function pad(str, max) {
+    str = str.toString();
+    return str.length < max ? pad("0" + str, max) : str;
+}
+
 Array.prototype.remove = function(item) {
     // TODO Update to use Array.prototype.indexOf
     for(var i = this.length; i--;) {

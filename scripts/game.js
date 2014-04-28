@@ -42,7 +42,12 @@ function Game(debugMode, challenge) {
     };
 
     this._log = function (text) {
-        $('#log').append(text);
+        var time = new Date();
+        var hh = pad(time.getHours(), 2);
+        var mm = pad(time.getMinutes(), 2);
+        var ss = pad(time.getSeconds(), 2);
+        var lll = pad(time.getMilliseconds(), 3);
+        $('#log').append('[' + hh + ':' + mm + ':' + ss + '.' + lll + '] ' + text);
         $('#log').append('\n');
         console.log(text);
     };
