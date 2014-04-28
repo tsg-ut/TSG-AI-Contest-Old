@@ -75,6 +75,6 @@ function Game(debugMode, challenge) {
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         game._log(errorThrown);
-        game._log('loading challenge failed.');
+        game._log('Loading challenge failed.');
     });
 }
