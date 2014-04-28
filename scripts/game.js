@@ -20,6 +20,17 @@ function Game(debugMode, challenge) {
         );
     };
 
+    this._validateChallenge = function () {
+        try {
+            var test = new Umpire();
+            delete test;
+            return true;
+        } catch (e) {
+            game._log('Challenge validation failed.');
+            return false;
+        }
+    }
+
     this._execute = function () {
         var code = this.editor.getCode();
 
@@ -52,19 +63,13 @@ function Game(debugMode, challenge) {
     };
 
     // load challenge scripts
-    /*$.ajax({
-        url: 'challenges/' + game._challenge.name + '/umpire.js',
-        dataType: 'script',
-        success: function(){}
-    }).done(function () {
-        game.enableButtons();
+    this._loadChallenge().done(function () {
+        if (game._validateChallenge()) {
+            game._log('Challenge loaded and validated.')
+            game.enableButtons();
+        }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         game._log(errorThrown);
         game._log('loading challenge failed.');
-    });*/
-    $.getScript('challenges/' + game._challenge.name + '/umpire.js', function () {
-
-        alert("Script loaded and executed.");
-        // Here you can use anything you defined in the loaded script
     });
 }

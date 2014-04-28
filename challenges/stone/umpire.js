@@ -1,9 +1,6 @@
-﻿var Umpire = function () {
+var Umpire = function (name) {
     var status = {
         stone: 100
     }
-
-    console.log('Umpire getting up...');
+    this.name = name;
 };
-
-console.log('hi');
