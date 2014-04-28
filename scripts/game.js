@@ -1,6 +1,8 @@
 function Game(debugMode, challenge) {
     var game = this;
 
+    this._debugMode = debugMode;
+
     this._challenge = {};
     this._challenge.name = challenge;
 
@@ -62,10 +64,6 @@ function Game(debugMode, challenge) {
             this._globalVars.push(p);
         }
     }
-
-    if (debugMode) {
-        this._debugMode = true;
-    };
 
     // load challenge scripts
     this._loadChallenge().done(function () {
