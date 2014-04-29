@@ -40,6 +40,8 @@ function Game(debugMode, challenge) {
 
         var validatedAct = this.validate(code);
 
+        game.waitTime = $('#waitTime').spinner('value');
+
         if (validatedAct) {
             privates.umpire.playGame(validatedAct, function () {
                 return randInt(1, 3);

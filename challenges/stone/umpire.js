@@ -4,7 +4,7 @@ var Umpire = function (name) {
     };
 
     this.playGame = function (contestantAction, rivalAction) {
-        status.stone = randInt(1000, 2000);
+        status.stone = randInt(10, 200);
 
         privates.game._log('Game started with ' + status.stone + ' stones.');
 
@@ -31,9 +31,13 @@ var Umpire = function (name) {
 
             $('#screen').text(status.stone);
 
-            setTimeout(function () {
+            if (privates.game.waitTime === 0) {
                 rivalsTurn(status);
-            }, privates.game._waitTime);
+            } else {
+                setTimeout(function () {
+                    rivalsTurn(status);
+                }, privates.game.waitTime);
+            }
         };
 
         var rivalsTurn = function(status) {
@@ -59,9 +63,13 @@ var Umpire = function (name) {
 
             $('#screen').text(status.stone);
 
-            setTimeout(function () {
+            if (privates.game.waitTime === 0) {
                 contestantsTurn(status);
-            }, privates.game._waitTime);
+            } else {
+                setTimeout(function () {
+                    contestantsTurn(status);
+                }, privates.game.waitTime);
+            }
         };
 
         var gameSet = function(winner) {

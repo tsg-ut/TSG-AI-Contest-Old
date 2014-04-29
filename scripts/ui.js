@@ -12,3 +12,14 @@ Game.prototype.enableButtons = function () {
         game._execute();
     });
 };
+
+$(document).ready(function () {
+    $('#waitTime').spinner({
+        step: 50,
+        min: 0,
+        max: 500,
+        culture: 'ja'
+    });
+});
+
+
