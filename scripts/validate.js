@@ -19,6 +19,7 @@ Game.prototype.verbotenWords = [
     'parent', 'content', // parent === content === window in most of cases
     'this[', // prevents this['win'+'dow'], etc.
     'alert', // prevents alertion
+    'function', //prevents function using anf inifinit recursion
     '~' // prevents ~function(){}();
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention

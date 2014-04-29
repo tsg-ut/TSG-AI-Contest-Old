@@ -15,7 +15,7 @@ Game.prototype.enableButtons = function () {
 
 $(document).ready(function () {
     $('#waitTime').spinner({
-        step: 50,
+        step: 10,
         min: 0,
         max: 500,
         culture: 'ja'
