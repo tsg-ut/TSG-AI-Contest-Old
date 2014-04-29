@@ -210,7 +210,8 @@ function Game(debugMode, challenge) {
 
         var validatedAct = this.validate(code);
 
-        game.waitTime = $('#waitTime').spinner('value');
+        game.waitTime = $('#waitTime').spinner('value') - 5;
+        if (game.waitTime < 0) game.waitTime = 0;
 
         if (validatedAct) {
             privates.umpire.playGame(validatedAct, function () {
@@ -271,7 +272,7 @@ Game.prototype.enableButtons = function () {
 
 $(document).ready(function () {
     $('#waitTime').spinner({
-        step: 50,
+        step: 10,
         min: 0,
         max: 500,
         culture: 'ja'
@@ -679,6 +680,7 @@ Game.prototype.verbotenWords = [
     'parent', 'content', // parent === content === window in most of cases
     'this[', // prevents this['win'+'dow'], etc.
     'alert', // prevents alertion
+    'function', //prevents function using anf inifinit recursion
     '~' // prevents ~function(){}();
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
