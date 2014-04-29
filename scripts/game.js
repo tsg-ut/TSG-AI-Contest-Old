@@ -6,6 +6,8 @@ function Game(debugMode, challenge) {
     this._challenge = {};
     this._challenge.name = challenge;
 
+    this.waitTime = 300;
+
     this._loadChallenge = function () {
         return $.when(
             $.ajax({
@@ -39,7 +41,9 @@ function Game(debugMode, challenge) {
         var validatedAct = this.validate(code);
 
         if (validatedAct) {
-            validatedAct(100);
+            privates.umpire.playGame(validatedAct, function () {
+                return randInt(1, 3);
+            })
         }
     };
 
@@ -51,6 +55,7 @@ function Game(debugMode, challenge) {
         var lll = pad(time.getMilliseconds(), 3);
         $('#log').append('[' + hh + ':' + mm + ':' + ss + '.' + lll + '] ' + text);
         $('#log').append('\n');
+        $('#log').scrollTop(1000000);
         console.log(text);
     };
 
@@ -68,7 +73,8 @@ function Game(debugMode, challenge) {
     // load challenge scripts
     this._loadChallenge().done(function () {
         if (game._validateChallenge()) {
-            game._log('Challenge loaded and validated.')
+            game._log('Challenge loaded and validated.');
+            privates.umpire = new Umpire();
             game.enableButtons();
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {

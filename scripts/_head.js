@@ -1,4 +1,4 @@
-(function () {
-
 var privates = {};
+
+(function () {
 

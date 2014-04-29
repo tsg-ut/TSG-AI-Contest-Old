@@ -1,3 +1,6 @@
-﻿var act = function (stone) {
+﻿var act = function (status) {
+    var stone = status.stone;
+
     /* action */
+
 };

@@ -27,11 +27,6 @@ Game.prototype.validate = function (code) {
     privateScope = {};
     privateScope.game = this;
 
-    privateScope.turnCode =
-        ["var act = function(stone) {",
-        "    {{code}}",
-        "}"].join('\n');
-
     try {
         for (var i = 0; i < this.verbotenWords.length; i++) {
             var badWord = this.verbotenWords[i];
@@ -51,7 +46,7 @@ Game.prototype.validate = function (code) {
                     "}");
         }).join('\n');
 
-        code = privateScope.turnCode.replace('{{code}}', code);
+        code = privateScope.game._challenge.contestant.replace('/* action */', code);
 
         if (this._debugMode) {
             console.log(code);
