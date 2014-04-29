@@ -40,7 +40,8 @@ function Game(debugMode, challenge) {
 
         var validatedAct = this.validate(code);
 
-        game.waitTime = $('#waitTime').spinner('value');
+        game.waitTime = $('#waitTime').spinner('value') - 5;
+        if (game.waitTime < 0) game.waitTime = 0;
 
         if (validatedAct) {
             privates.umpire.playGame(validatedAct, function () {
