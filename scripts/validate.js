@@ -18,25 +18,18 @@ Game.prototype.verbotenWords = [
     'self.', 'self[', 'top.', 'top[', 'frames',  // self === top === frames === window
     'parent', 'content', // parent === content === window in most of cases
     'this[', // prevents this['win'+'dow'], etc.
-    'alert', // prevents alert
+    'alert', // prevents alertion
     '~' // prevents ~function(){}();
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
-var DummyDisplay = function () {
-    this.clear = function () {};
-    this.drawAll = function () {};
-    this.drawObject = function () {};
-    this.drawText = function () {};
-    this.writeStatus = function () {};
-};
+Game.prototype.validate = function (code) {
+    privateScope = {};
+    privateScope.game = this;
 
-Game.prototype.validate = function(code) {
-    var game = this;
-
-    var turnCode =
-        ["var turn = function(stone) {",
-            "{{code}}",
+    privateScope.turnCode =
+        ["var act = function(stone) {",
+        "    {{code}}",
         "}"].join('\n');
 
     try {
@@ -53,22 +46,36 @@ Game.prototype.validate = function(code) {
         code = $.map(code.split('\n'), function (line, i) {
             return line.replace(/for\s*\((.*);(.*);(.*)\)\s*{/g,
                 "for ($1, startTime = Date.now();$2;$3){" +
-                    "if (Date.now() - startTime > " + game.allowedTime + ") {" +
-                        "throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
+                    "if (Date.now() - startTime > " + privateScope.game.allowedTime + ") {" +
+                        "throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + privateScope.game.allowedTime + " ms exceeded.';" +
                     "}");
         }).join('\n');
 
-        code = turnCode.replace('{{code}}', code);
+        code = privateScope.turnCode.replace('{{code}}', code);
 
         if (this._debugMode) {
             console.log(code);
         }
 
-        // evaluate the code to get startLevel() and (opt) validateLevel() methods
+        var closuredEval = this._eval;
 
-        this._eval(code);
+        return (function () {
+            var privates = undefined;
+            var privateScope = undefined;
+            var window = undefined;
+            var document = undefined;
+            var alert = undefined;
+            var fromCharCode = undefined;
+            var atob = undefined;
+            var btoa = undefined;
+            var Function = undefined;
+            var setTimeout = undefined;
+            var setInterval = undefined;
 
-        return act;
+            eval(code);
+
+            return act;
+        })();
     } catch (e) {
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {
@@ -80,7 +87,6 @@ Game.prototype.validate = function(code) {
         this._log(exceptionText);
         throw e;
 
-        // throw e; // for debugging
         return null;
     }
 };

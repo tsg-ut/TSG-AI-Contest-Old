@@ -1,12 +1,12 @@
 var Umpire = function (name) {
-    var status = {
+    var _status = {
         stone: 100
     };
 
-    $('#screen').text(status.stone);
+    this.playGame = function (contestantAction, rivalAction) {
+        _status.stone = randInt(1000, 2000);
 
-    this.playGame = function () {
-        status.stone -= 0;
+        _status.stone -= 0;
     };
 };
 

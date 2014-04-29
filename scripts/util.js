@@ -148,13 +148,19 @@ function isNewerVersion(v1, v2) {
     var maxLen = Math.max(v1parts.length, v2parts.length);
     var part1, part2;
     var cmp = 0;
-    for(var i = 0; i < maxLen && !cmp; i++) {
+    for (var i = 0; i < maxLen && !cmp; i++) {
         part1 = parseInt(v1parts[i], 10) || 0;
         part2 = parseInt(v2parts[i], 10) || 0;
-        if(part1 < part2)
+        if (part1 < part2)
             cmp = 1;
-        if(part1 > part2)
+        if (part1 > part2)
             cmp = -1;
     }
     return (0 > cmp);
-}
+};
+
+// returns random integers including from and to
+var randInt = function (from, to) {
+    return Math.floor(Math.random() * (to - from + 1)) + from;
+};
+
